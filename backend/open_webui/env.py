@@ -113,8 +113,8 @@ for source in log_sources:
 log.setLevel(SRC_LOG_LEVELS["CONFIG"])
 
 WEBUI_NAME = os.environ.get("WEBUI_NAME", "Open WebUI")
-if WEBUI_NAME != "Open WebUI":
-    WEBUI_NAME += " (Open WebUI)"
+# if WEBUI_NAME != "Open WebUI":
+#     WEBUI_NAME += " (Open WebUI)"
 
 WEBUI_FAVICON_URL = "https://openwebui.com/favicon.png"
 
@@ -536,9 +536,7 @@ if LICENSE_PUBLIC_KEY:
 -----BEGIN PUBLIC KEY-----
 {LICENSE_PUBLIC_KEY}
 -----END PUBLIC KEY-----
-""".encode(
-            "utf-8"
-        )
+""".encode("utf-8")
     )
 
 

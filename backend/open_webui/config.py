@@ -2,7 +2,6 @@ import json
 import logging
 import os
 import shutil
-import base64
 import redis
 
 from datetime import datetime
@@ -20,10 +19,6 @@ from open_webui.env import (
     DATA_DIR,
     DATABASE_URL,
     ENV,
-    REDIS_URL,
-    REDIS_KEY_PREFIX,
-    REDIS_SENTINEL_HOSTS,
-    REDIS_SENTINEL_PORT,
     FRONTEND_BUILD_DIR,
     OFFLINE_MODE,
     OPEN_WEBUI_DIR,
@@ -804,7 +799,7 @@ def load_oauth_providers():
             f"⚠️  OAuth providers configured ({provider_list}) but OPENID_PROVIDER_URL not set - logout will not work!"
         )
         log.warning(
-            f"Set OPENID_PROVIDER_URL to your OAuth provider's OpenID Connect discovery endpoint to fix logout functionality."
+            "Set OPENID_PROVIDER_URL to your OAuth provider's OpenID Connect discovery endpoint to fix logout functionality."
         )
 
 
@@ -822,9 +817,9 @@ try:
             if item.is_file() or item.is_symlink():
                 try:
                     item.unlink()
-                except Exception as e:
+                except Exception:
                     pass
-except Exception as e:
+except Exception:
     pass
 
 for file_path in (FRONTEND_BUILD_DIR / "static").glob("**/*"):
@@ -1162,33 +1157,60 @@ except Exception as e:
 if default_prompt_suggestions == []:
     default_prompt_suggestions = [
         {
-            "title": ["Help me study", "vocabulary for a college entrance exam"],
-            "content": "Help me study vocabulary: write a sentence for me to fill in the blank, and I'll try to pick the correct option.",
+            "title": ["Tìm thử nghiệm lâm sàng phù hợp", "dựa trên hồ sơ bệnh nhân"],
+            "content": "Hãy giúp tôi tìm thử nghiệm lâm sàng phù hợp dựa trên tuổi, chẩn đoán và tình trạng điều trị hiện tại của bệnh nhân.",
         },
         {
-            "title": ["Give me ideas", "for what to do with my kids' art"],
-            "content": "What are 5 creative things I could do with my kids' art? I don't want to throw them away, but it's also so much clutter.",
+            "title": ["Giải thích tiêu chí chọn – loại", "của một thử nghiệm lâm sàng"],
+            "content": "Giải thích cho tôi tiêu chí chọn – loại (inclusion/exclusion criteria) của thử nghiệm này theo cách dễ hiểu.",
         },
         {
-            "title": ["Tell me a fun fact", "about the Roman Empire"],
-            "content": "Tell me a random fun fact about the Roman Empire",
+            "title": ["Tóm tắt thử nghiệm lâm sàng", "một cách ngắn gọn, dễ hiểu"],
+            "content": "Tóm tắt nội dung của thử nghiệm lâm sàng này và cho tôi biết mục tiêu chính, phương pháp và thời gian dự kiến.",
         },
         {
-            "title": ["Show me a code snippet", "of a website's sticky header"],
-            "content": "Show me a code snippet of a website's sticky header in CSS and JavaScript.",
+            "title": ["Giải nghĩa thuật ngữ y khoa", "trong tài liệu thử nghiệm"],
+            "content": "Giải thích giúp tôi các thuật ngữ y khoa khó trong tài liệu này theo cách đơn giản, dành cho bệnh nhân.",
         },
         {
             "title": [
-                "Explain options trading",
-                "if I'm familiar with buying and selling stocks",
+                "So sánh các thử nghiệm liên quan",
+                "cho một bệnh cụ thể",
             ],
-            "content": "Explain options trading in simple terms if I'm familiar with buying and selling stocks.",
+            "content": "Hãy so sánh các thử nghiệm lâm sàng hiện có liên quan đến bệnh này dựa trên pha thử nghiệm, mục tiêu và tiêu chí chọn.",
         },
         {
-            "title": ["Overcome procrastination", "give me tips"],
-            "content": "Could you start by asking me about instances when I procrastinate the most and then give me some suggestions to overcome it?",
+            "title": ["Kiểm tra độ phù hợp hồ sơ", "với một thử nghiệm cụ thể"],
+            "content": "Dựa trên hồ sơ bệnh nhân tôi cung cấp, hãy đánh giá nhanh xem bệnh nhân có khả năng phù hợp với thử nghiệm lâm sàng này hay không.",
         },
     ]
+    # default_prompt_suggestions = [
+    #     {
+    #         "title": ["Find suitable clinical trials", "based on patient profile"],
+    #         "content": "Help me find appropriate clinical trials based on the patient's age, diagnosis, and current treatment status.",
+    #     },
+    #     {
+    #         "title": ["Explain inclusion–exclusion criteria", "of a clinical trial"],
+    #         "content": "Explain the inclusion and exclusion criteria of this clinical trial in an easy-to-understand way.",
+    #     },
+    #     {
+    #         "title": ["Summarize the clinical trial", "clearly and concisely"],
+    #         "content": "Summarize this clinical trial and tell me its main objectives, methodology, and expected timeline.",
+    #     },
+    #     {
+    #         "title": ["Explain medical terminology", "in the trial documents"],
+    #         "content": "Help me explain the complex medical terms in these documents in simple, patient-friendly language.",
+    #     },
+    #     {
+    #         "title": ["Compare related clinical trials", "for a specific disease"],
+    #         "content": "Compare the available clinical trials related to this disease based on trial phase, goals, and eligibility criteria.",
+    #     },
+    #     {
+    #         "title": ["Check patient eligibility", "for a specific trial"],
+    #         "content": "Based on the patient profile I provide, quickly assess whether the patient is likely to be eligible for this clinical trial.",
+    #     },
+    # ]
+
 
 DEFAULT_PROMPT_SUGGESTIONS = PersistentConfig(
     "DEFAULT_PROMPT_SUGGESTIONS",
